@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CAT Evaluasi Pembelajaran</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b1f2a;--ac:#1f4e79;--mu:#667;--bd:#d5dbe8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181f;--card:#1e242d;--tx:#e8ebf0;--ac:#7fb2e5;--mu:#9aa3b0;--bd:#343c49}}
+:root[data-theme="dark"]{--bg:#14181f;--card:#1e242d;--tx:#e8ebf0;--ac:#7fb2e5;--mu:#9aa3b0;--bd:#343c49}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:12px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-top:14px}
+h1,h2{color:var(--ac);margin:0 0 6px}h1{font-size:22px}h2{font-size:18px}
+input[type=text]{width:100%;box-sizing:border-box;padding:10px;margin:4px 0 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.o{display:block;padding:10px 12px;margin:8px 0;border:1px solid var(--bd);border-radius:8px;cursor:pointer}
+.o:has(input:checked){border-color:var(--ac);background:var(--bg)}
+button{background:var(--ac);color:var(--card);border:0;border-radius:8px;padding:10px 20px;font:inherit;cursor:pointer;margin-top:8px}
+.m{color:var(--mu);font-size:13px}.q{font-size:18px;margin:14px 0}
+.bar{height:8px;background:var(--bd);border-radius:6px}.bar i{display:block;height:8px;background:var(--ac);border-radius:6px}
+.w{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px solid var(--bd);padding:6px;text-align:left}
+svg{width:100%;height:auto}
+</style>
+</head>
+<body>
+<main>
+<div class="c"><h1>CAT Evaluasi Pembelajaran</h1><div class="m">Mengukur kemampuan awal evaluasi pembelajaran mahasiswa</div></div>
+<div id="app"></div>
+</main>
+<script>
+// Setiap soal: [pertanyaan, jawaban benar, pengecoh 1, pengecoh 2, pengecoh 3]
+const Q=[
+["Seorang dosen memberikan tes kepada mahasiswa dan memperoleh skor 78. Kegiatan memberikan angka berdasarkan hasil tes tersebut termasuk kegiatan ....","Pengukuran","Penilaian","Evaluasi","Diagnostik"],
+["Proses memberikan makna terhadap skor hasil pengukuran sehingga dapat diketahui kualitas atau tingkat kemampuan seseorang disebut ....","Penilaian","Pengukuran","Identifikasi","Prediksi"],
+["Kegiatan sistematis untuk mengumpulkan, mengolah, menganalisis, dan menggunakan informasi sebagai dasar pengambilan keputusan disebut ....","Evaluasi","Pengukuran","Observasi","Prediksi"],
+["Perbedaan utama antara pengukuran dan evaluasi adalah ....","Pengukuran menghasilkan data kuantitatif, sedangkan evaluasi menghasilkan keputusan berdasarkan data","Pengukuran hanya dilakukan dengan wawancara","Pengukuran selalu lebih penting daripada evaluasi","Evaluasi hanya dilakukan sebelum pengukuran"],
+["Jika seorang mahasiswa memperoleh skor 80 dari tes yang memiliki skor maksimum 100, angka 80 tersebut merupakan hasil dari kegiatan ....","Pengukuran","Penilaian","Evaluasi","Diagnosis"],
+["Evaluasi pembelajaran pada dasarnya dilakukan untuk mengetahui ....","Ketercapaian tujuan pembelajaran","Jumlah soal yang diberikan","Kecepatan mengajar guru","Banyaknya tugas yang diberikan"],
+["Salah satu tujuan evaluasi pembelajaran adalah ....","Mengetahui ketercapaian tujuan pembelajaran","Memberikan hukuman kepada peserta didik","Menentukan administrasi sekolah","Menentukan harga buku"],
+["Prinsip evaluasi yang mengharuskan penilaian dilakukan berdasarkan kriteria atau tujuan yang telah ditetapkan disebut prinsip ....","Relevansi","Objektivitas","Keadilan","Kerahasiaan"],
+["Evaluasi yang dilakukan selama proses pembelajaran berlangsung dengan tujuan memberikan umpan balik disebut evaluasi ....","Formatif","Sumatif","Diagnostik","Prediktif"],
+["Evaluasi yang dilakukan pada akhir suatu program pembelajaran untuk menentukan keberhasilan program disebut evaluasi ....","Sumatif","Formatif","Diagnostik","Prediktif"],
+["Salah satu fungsi evaluasi bagi guru adalah ....","Memperbaiki proses pembelajaran","Memberikan hukuman","Menentukan biaya ujian","Menentukan tempat ujian"],
+["Evaluasi formatif terutama digunakan untuk ....","Memberikan umpan balik untuk memperbaiki pembelajaran","Menentukan nilai akhir","Menentukan kelulusan akhir","Menentukan peringkat sekolah"],
+["Evaluasi sumatif biasanya dilaksanakan ....","Setelah seluruh proses pembelajaran selesai","Sebelum pembelajaran dimulai","Pada pertengahan pembelajaran","Pada awal pembelajaran"],
+["Penilaian yang dilakukan dengan membandingkan hasil belajar peserta didik dengan standar tertentu disebut penilaian acuan ....","Kriteria","Norma","Kualitatif","Objektif"],
+["Teknik penilaian yang paling tepat untuk mengukur kemampuan mahasiswa dalam melakukan suatu keterampilan adalah ....","Tes praktik","Tes tertulis","Angket","Dokumentasi"],
+["Teknik yang digunakan untuk memperoleh informasi tentang sikap mahasiswa melalui pengamatan perilaku disebut ....","Observasi","Wawancara","Tes tertulis","Studi dokumentasi"],
+["Langkah pertama dalam penyusunan instrumen tes adalah ....","Menentukan tujuan dan indikator yang akan diukur","Menentukan warna sampul instrumen","Menentukan harga instrumen","Menentukan biaya ujian"],
+["Kisi-kisi soal berfungsi terutama untuk ....","Menjamin keterwakilan materi yang diukur","Menentukan jumlah peserta didik","Menggantikan fungsi guru","Menentukan tempat ujian"],
+["Rumusan indikator soal yang baik harus ....","Dirumuskan jelas dan sesuai dengan kompetensi yang diukur","Menggunakan bahasa yang sulit","Tidak berhubungan dengan tujuan","Tidak perlu jelas"],
+["Soal pilihan ganda yang baik harus memiliki satu jawaban yang paling ....","Tepat","Panjang","Rumit","Tidak ada jawaban benar"],
+["Salah satu fungsi kisi-kisi dalam penyusunan tes adalah ....","Memastikan keterwakilan kompetensi yang diukur","Menentukan harga buku","Menentukan waktu ujian","Menentukan lokasi ujian"],
+["Dalam menyusun soal, tingkat kesukaran harus disesuaikan dengan ....","Tujuan pengukuran dan karakteristik peserta didik","Keinginan guru","Kondisi kelas","Waktu istirahat"],
+["Validitas instrumen menunjukkan sejauh mana instrumen ....","Mengukur apa yang seharusnya diukur","Mengukur jumlah materi yang diajarkan","Menghasilkan nilai tinggi","Mengukur semua aspek secara otomatis"],
+["Reliabilitas instrumen menunjukkan tingkat ....","Konsistensi hasil pengukuran","Tingkat kesulitan soal","Jumlah pilihan jawaban","Banyaknya peserta didik"],
+["Instrumen dikatakan valid apabila instrumen tersebut ....","Mengukur kemampuan yang menjadi tujuan pengukuran","Selalu menghasilkan nilai tinggi","Tidak memiliki kesalahan penulisan","Mengukur apa yang seharusnya tidak diukur"],
+["Koefisien reliabilitas yang tinggi menunjukkan bahwa instrumen ....","Menghasilkan skor yang konsisten","Selalu menghasilkan skor yang sama","Hanya dapat digunakan sekali","Tidak dapat digunakan kembali"],
+["Validitas isi dapat diperiksa terutama melalui ....","Penilaian ahli terhadap kesesuaian isi dengan kisi-kisi","Pendapat pribadi guru","Analisis statistik saja","Jumlah peserta didik"],
+["Indeks kesukaran butir soal menunjukkan ....","Proporsi peserta didik yang menjawab benar","Jumlah pilihan jawaban","Jumlah soal dalam tes","Banyaknya peserta didik"],
+["Daya pembeda suatu butir soal menunjukkan kemampuan soal dalam ....","Membedakan peserta didik berkemampuan tinggi dan rendah","Mengukur jumlah soal dalam tes","Menentukan jumlah pilihan jawaban","Menentukan kelulusan secara langsung"],
+["Pengecoh dalam soal pilihan ganda dikatakan berfungsi apabila ....","Dipilih oleh sebagian peserta didik, terutama yang berkemampuan rendah","Tidak dipilih oleh peserta didik","Selalu dipilih oleh semua peserta didik","Dipilih oleh semua peserta didik"],
+["Jika sebagian besar mahasiswa menjawab benar suatu soal, maka soal tersebut cenderung memiliki tingkat kesukaran ....","Mudah","Sedang","Sulit","Sangat sulit"],
+["Jika suatu butir memiliki daya pembeda negatif, maka hal tersebut menunjukkan bahwa ....","Peserta didik berkemampuan rendah lebih banyak menjawab benar","Peserta didik berkemampuan tinggi dan rendah menjawab sama","Peserta didik berkemampuan tinggi lebih banyak menjawab benar","Soal tersebut selalu terlalu mudah"],
+["Analisis butir soal dilakukan terutama untuk ....","Mengetahui kualitas setiap butir","Menambah jumlah soal tanpa analisis","Menentukan siapa yang salah","Menentukan kualitas peserta didik secara mutlak"],
+["Seorang mahasiswa memperoleh nilai 85 dengan KKM 75. Interpretasi yang tepat adalah ....","Sudah mencapai ketuntasan","Belum mencapai ketuntasan","Perlu diberi nilai nol","Memerlukan remedial"],
+["Jika nilai mahasiswa berada di bawah KKM, maka guru sebaiknya ....","Memberikan remedial atau perbaikan pembelajaran","Memberikan hukuman","Mengabaikan hasil evaluasi","Menaikkan nilai tanpa dasar"],
+["Hasil evaluasi pembelajaran sebaiknya digunakan untuk ....","Menentukan keputusan dan perbaikan pembelajaran berdasarkan data","Mengabaikan hasil belajar","Memberikan hukuman","Menambah jumlah tugas"],
+["Jika sebagian besar mahasiswa belum mencapai tujuan pembelajaran, guru perlu ....","Mengevaluasi dan memperbaiki proses pembelajaran","Mengabaikan hasil evaluasi","Mengulang seluruh materi tanpa analisis","Menaikkan nilai semua peserta didik"],
+["Remedial diberikan terutama kepada mahasiswa yang ....","Belum mencapai tujuan pembelajaran","Sudah mencapai tujuan pembelajaran","Sudah mencapai tujuan dan membutuhkan tantangan lebih","Tidak perlu mengikuti pembelajaran"],
+["Pengayaan diberikan terutama kepada mahasiswa yang ....","Sudah mencapai tujuan dan membutuhkan tantangan lebih","Belum mencapai tujuan pembelajaran","Memerlukan remedial","Tidak perlu mengikuti pembelajaran"],
+["Tindak lanjut hasil evaluasi bertujuan untuk ....","Memperbaiki pembelajaran berikutnya berdasarkan hasil evaluasi","Tidak perlu melakukan evaluasi lanjutan","Menentukan siapa yang harus dihukum","Menambah jumlah tugas"]
+];
+
+// Bank soal: posisi kunci merata (10 x A, B, C, D); parameter a dan b SIMULASI
+let seed=123;const R=()=>(seed=seed*16807%2147483647)/2147483647;
+const bank=Q.map((q,i)=>{const k=(3*i+(i>>2))%4,o=[];let d=2;
+  for(let j=0;j<4;j++)o[j]=j===k?q[1]:q[d++];
+  return{id:i+1,t:q[0],o,k,a:+(0.8+R()).toFixed(2),b:+(-2+4*i/39).toFixed(2)}});
+
+// Fungsi IRT 2PL
+const MAX=15,MIN=5,TSE=0.3;
+const P=(t,a,b)=>1/(1+Math.exp(-a*(t-b)));
+const info=(t,a,b)=>{const p=P(t,a,b);return a*a*p*(1-p)};
+const se=(t,adm)=>{const s=adm.reduce((u,x)=>u+info(t,x.a,x.b),0);return s>0?1/Math.sqrt(s):Infinity};
+function est(adm,res){let best=0,bl=-Infinity;
+  for(let t=-4;t<=4.0001;t+=0.01){let l=-t*t/2;
+    adm.forEach((x,i)=>{const p=Math.min(Math.max(P(t,x.a,x.b),1e-10),1-1e-10);l+=res[i]?Math.log(p):Math.log(1-p)});
+    if(l>bl){bl=l;best=t}}
+  return best}
+function pick(t){let b=null,v=-1;
+  bank.forEach(x=>{if(!S.adm.includes(x)){const n=info(t,x.a,x.b);if(n>v){v=n;b=x}}});return b}
+const kat=t=>t>=1.5?"Sangat tinggi":t>=0.5?"Tinggi":t>=-0.5?"Sedang":t>=-1.5?"Rendah":"Sangat rendah";
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// Tampilan
+const app=document.getElementById("app");
+let S;
+function home(){
+  app.innerHTML=`<div class="c"><h2>Identitas Peserta</h2>
+  <label>Nama lengkap<input type="text" id="nm"></label>
+  <label>Kelas / NIM (opsional)<input type="text" id="kl"></label>
+  <p>Tes ini adaptif: soal berikutnya dipilih berdasarkan jawaban Anda sebelumnya. Pilih satu jawaban, lalu tekan Jawab.</p>
+  <button id="go">Mulai Tes</button><p class="m" id="er"></p>
+  <p class="m">Selamat mengerjakan.</p></div>`;
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("nm").value.trim();
+    if(!n){document.getElementById("er").textContent="Nama harus diisi.";return}
+    S={n:n,k:document.getElementById("kl").value.trim(),adm:[],res:[],ans:[],th:[],se:[],cur:null,t:0,why:""};
+    S.cur=pick(0);quiz()}}
+function quiz(){
+  const x=S.cur,n=S.adm.length+1;
+  app.innerHTML=`<div class="c"><b>Soal ke-${n}</b> <span class="m">(maksimal ${MAX})</span>
+  <div class="bar"><i style="width:${(n-1)/MAX*100}%"></i></div>
+  <div class="q">${esc(x.t)}</div>
+  ${x.o.map((o,j)=>`<label class="o"><input type="radio" name="p" value="${j}"> ${"ABCD"[j]}. ${esc(o)}</label>`).join("")}
+  <button id="jw">Jawab</button><p class="m" id="er"></p></div>`;
+  document.getElementById("jw").onclick=()=>{
+    const c=document.querySelector("input[name=p]:checked");
+    if(!c){document.getElementById("er").textContent="Pilih salah satu jawaban dulu.";return}
+    const j=+c.value;S.adm.push(x);S.res.push(j===x.k?1:0);S.ans.push("ABCD"[j]);
+    S.t=est(S.adm,S.res);const e=se(S.t,S.adm);S.th.push(S.t);S.se.push(e);
+    const m=S.adm.length;
+    if(m>=MIN&&e<=TSE)S.why="Standard Error telah mencapai target.";
+    else if(m>=MAX)S.why="Jumlah soal maksimum telah tercapai.";
+    if(!S.why){S.cur=pick(S.t);if(!S.cur)S.why="Bank soal telah habis."}
+    S.why?hasil():quiz()}}
+function grafik(a,j){
+  const w=300,h=120,mn=Math.min(...a,0),mx=Math.max(...a),n=a.length;
+  const pt=a.map((v,i)=>[10+(n>1?i*280/(n-1):140),110-(v-mn)/((mx-mn)||1)*100]);
+  return`<p><b>${j}</b></p><svg viewBox="0 0 ${w} ${h}"><polyline fill="none" stroke="var(--ac)" stroke-width="2" points="${pt.map(p=>p.join(",")).join(" ")}"/>${pt.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--ac)"/>`).join("")}</svg>`}
+function hasil(){
+  const n=S.res.length,b=S.res.reduce((u,v)=>u+v,0),e=S.se[n-1];
+  app.innerHTML=`<div class="c"><h2>Hasil Akhir CAT</h2>
+  <p>Peserta: <b>${esc(S.n)}</b> ${S.k?"("+esc(S.k)+")":""}<br>Tes berhenti karena: ${S.why}</p>
+  <div class="w"><table>
+  <tr><th>Jumlah soal</th><td>${n}</td></tr>
+  <tr><th>Jawaban benar</th><td>${b}</td></tr>
+  <tr><th>Persentase benar</th><td>${(b/n*100).toFixed(2)}%</td></tr>
+  <tr><th>Estimasi theta</th><td>${S.t.toFixed(3)}</td></tr>
+  <tr><th>Standard Error</th><td>${e.toFixed(3)}</td></tr>
+  <tr><th>Kategori kemampuan</th><td>${kat(S.t)}</td></tr></table></div>
+  ${grafik(S.th,"Perkembangan Estimasi Kemampuan (theta)")}${grafik(S.se,"Perkembangan Standard Error")}
+  <p><b>Riwayat Jawaban</b></p><div class="w"><table>
+  <tr><th>No</th><th>ID soal</th><th>Jawaban</th><th>Kunci</th><th>Skor</th><th>Theta</th><th>SE</th></tr>
+  ${S.adm.map((x,i)=>`<tr><td>${i+1}</td><td>${x.id}</td><td>${S.ans[i]}</td><td>${"ABCD"[x.k]}</td><td>${S.res[i]}</td><td>${S.th[i].toFixed(3)}</td><td>${S.se[i].toFixed(3)}</td></tr>`).join("")}
+  </table></div>
+  <button id="ul">Ulangi Tes</button>
+  <p class="m">Prototipe: parameter a dan b masih simulasi, sehingga theta dan kategori kemampuan belum dapat ditafsirkan sebagai kemampuan sebenarnya.</p></div>`;
+  document.getElementById("ul").onclick=home}
+home();
+</script>
+</body>
+</html>
